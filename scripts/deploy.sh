@@ -1,0 +1,2 @@
+mkdir /home/ubuntu/test
+

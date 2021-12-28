@@ -1,0 +1,20 @@
+version: 0.0
+os: linux
+
+files:
+  - source: /
+    destination: /home/ubuntu/test
+permissions:
+  - object: /home/ubuntu/test/
+    owner: ubuntu
+    group: ubuntu
+hooks:
+  # 파일 설치 이전 실행할 파일
+#  BeforeInstall:
+#    - location: scripts/beforeInstall.bash
+#      runas: root
+  # 파일 설치 이후 실행할 파일
+  AfterInstall:
+    - location: scripts/deploy.sh
+      timeout: 60
+      runas: root
