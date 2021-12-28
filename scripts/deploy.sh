@@ -1,2 +1,2 @@
-mkdir /home/ubuntu/test
+mkdir /home/ubuntu/test2
 
