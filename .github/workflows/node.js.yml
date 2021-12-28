@@ -35,10 +35,12 @@ jobs:
       - run: npm ci
       - run: npm run build --if-present
 
+      # 압축파일 만드는 이벤트
       - name: Make zip file
         run: zip -qq -r ./$GITHUB_SHA.zip .
         shell: bash
 
+      # aws 권한부여 이벤트트
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -46,5 +48,9 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
 
+      # 만든 zip파일 s3로 업로드 하는 이벤트
       - name: Upload to S3
         run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://$BUCKET_NAME/$PROJECT_NAME/$GITHUB_SHA.zip
+
+      - name: Code Deploy
+        run: aws deploy create-deployment --application-name $CODE_DEPLOY_APP_NAME --deployment--config-name CodeDeployDefault.OneAtATime --deployment-group-name $DEPLOYMENT_GROUP_NAME --s3-location bucket=$BUCKET_NAME,bundleType=zip,key=$PROJECT_NAME/$GITHUB_SHA.zip
